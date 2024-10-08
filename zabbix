@@ -1,11 +1,5 @@
 #!/bin/bash
 
-if [ "$EUID" -ne 0 ]; then
-  echo "Будь ласка, запустіть цей скрипт з правами root."
-  exit 1
-fi
-
-echo "Починаємо встановлення Zabbix..."
 
 apt update -y && apt upgrade -y
 

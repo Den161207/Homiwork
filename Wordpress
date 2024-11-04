@@ -1,1 +1,27 @@
+sudo apt update && \
+sudo apt install -y apache2 mysql-server php php-mysql libapache2-mod-php php-cli wget unzip && \
+sudo mysql -e "CREATE DATABASE wordpress; CREATE USER 'wordpressuser'@'localhost' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpressuser'@'localhost'; FLUSH PRIVILEGES;" && \
+wget -P /tmp https://wordpress.org/latest.tar.gz && \
+sudo tar -xvzf /tmp/latest.tar.gz -C /var/www/html && \
+sudo chown -R www-data:www-data /var/www/html/wordpress && \
+sudo chmod -R 755 /var/www/html/wordpress && \
+sudo bash -c 'cat << EOF > /etc/apache2/sites-available/wordpress.conf
+<VirtualHost *:80>
+    ServerAdmin admin@example.com
+    DocumentRoot /var/www/html/wordpress
+    ServerName your_domain_or_IP
+    <Directory /var/www/html/wordpress/>
+        AllowOverride All
+    </Directory>
+    ErrorLog \${APACHE_LOG_DIR}/error.log
+    CustomLog \${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+EOF' && \
+sudo a2ensite wordpress.conf && \
+sudo a2enmod rewrite && \
+sudo systemctl restart apache2 && \
+sudo cp /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php && \
+sudo sed -i "s/database_name_here/wordpress/" /var/www/html/wordpress/wp-config.php && \
+sudo sed -i "s/username_here/wordpressuser/" /var/www/html/wordpress/wp-config.php && \
+sudo sed -i "s/password_here/password/" /var/www/html/wordpress/wp-config.php
 

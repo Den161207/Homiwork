@@ -1,0 +1,7 @@
+
+sudo apt update && \
+sudo apt install -y whois libuser && \
+sudo groupadd examplegroup && \
+sudo useradd -m -g examplegroup -s /bin/bash exampleuser && \
+echo "exampleuser:$(mkpasswd password123)" | sudo chpasswd && \
+sudo usermod -aG sudo exampleuser

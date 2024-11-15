@@ -1,0 +1,27 @@
+---
+- name: Install software based on OS
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install software on Ubuntu
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - curl
+        - git
+        - htop
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install software on Windows
+      win_package:
+        path: "C:\\Path\\To\\{{ item.file }}"
+        state: present
+      loop:
+        - { name: "Google Chrome", file: "chrome_installer.exe" }
+        - { name: "Notepad++", file: "notepadpp_installer.exe" }
+      when: ansible_facts['os_family'] == "Windows"
+
+    - name: Ensure the tasks are OS-specific
+      debug:
+        msg: "Software installed for {{ ansible_facts['os_family'] }}"
